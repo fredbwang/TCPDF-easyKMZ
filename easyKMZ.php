@@ -47,7 +47,7 @@ class easyKMZ
      * @param stdClass $placemark_data  issue data from database, if no data then read data from kmz
      * @return void
      */
-    public function __construct(\TCPDF $pdf, int $file_id = null, string $kmz_path, string $google_api_key, string $map_type = 'satellite', $bounds = self::BOUNDS, $displayColor = false)
+    public function __construct(\TCPDF $pdf, string $kmz_path, string $google_api_key, string $map_type = 'satellite', $bounds = self::BOUNDS, $displayColor = false,  int $file_id = null)
     {
         $this->pdf_obj = $pdf;
         $this->google_api_key = $google_api_key;
@@ -517,7 +517,8 @@ class easyKMZ
         }
         $size = (float)$scale * 5;
 
-        if ($this->displayColor) {
+        // color is not applicable in google's icon, tcpdf won't fill color into the icon file, so i use a simple round with color to replace it.
+        if ($this->displayColor) { 
             $this->pdf_obj->Circle($pos[0], $pos[1], $scale, 0, 360, 'F', [], $color);
         } else {
             $this->pdf_obj->Image($icon_path, $pos[0] - $size / 2, $pos[1] - $size / 2, $size, $size, '', '', '', false, 500);
